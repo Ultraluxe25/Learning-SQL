@@ -177,3 +177,87 @@ ORDER BY status, member_name;
 SELECT home_type, AVG(price) as avg_price
 FROM Rooms
 GROUP BY home_type;
+
+
+SELECT home_type, AVG(price) as avg_price
+FROM Rooms
+GROUP BY home_type;
+
+
+/* Найдём количество каждого вида жилья и отсортируем полученный список по убыванию */
+SELECT home_type, COUNT(*) as amount
+FROM Rooms
+GROUP BY home_type
+ORDER BY amount DESC;
+
+
+/* Для каждого жилого помещения найдём самую позднюю дату выезда (поле end_date) */
+SELECT room_id, MAX(end_date) AS last_end_date
+FROM Reservations
+GROUP BY room_id;
+
+
+/* Задача 16:
+Подсчитайте количество учеников в каждом классе, а также отсортируйте их по убыванию 
+количества учеников. Принадлежность ученика к конкретному классу вы 
+можете получить из таблицы Student_in_class. 
+В качестве результата необходимо вывести идентификатор класса 
+(поле class) и количество учеников в этом классе. */
+SELECT class, COUNT(*) AS count
+FROM Student_in_class
+GROUP BY class
+ORDER BY count DESC;
+
+
+/* Задача 17:
+Для каждого из существующих статусов (поле status) найдите самого старого человека
+(используйте поле birthday). Выведите статус и дату рождения.
+Для вывода даты рождения используйте псевдоним birthday. */
+SELECT status, MIN(birthday) AS birthday
+FROM FamilyMembers
+GROUP BY status;
+
+
+/* Задача 18:
+Получите среднее время полётов, совершённых на каждой из моделей самолёта. 
+Выведите поле plane и среднее время полёта в секундах.
+Для вывода времени используйте псевдоним time.
+Используйте функцию TIMESTAMPDIFF(second, time_out, time_in), 
+чтобы получить разницу во времени в секундах между двумя датами. */
+SELECT plane, AVG(TIMESTAMPDIFF(second, time_out, time_in)) AS time
+FROM Trip
+GROUP BY plane;
+/* http://kodesource.top/mysql/date-and-time-functions/mysql-timestampdiff-function.php */
+
+
+/* Задача 19:
+Выведите идентификатор комнаты (поле room_id), среднюю стоимость 
+за один день аренды (поле price, для вывода используйте псевдоним 
+avg_price), а также количество резерваций этой комнаты 
+(используйте псевдоним count). Полученный результат отсортируйте 
+в порядке убывания сначала по количеству резерваций, а потом 
+по средней стоимости. */
+SELECT room_id, AVG(price) AS avg_price, COUNT(room_id) AS count
+FROM Reservations
+GROUP BY room_id
+ORDER BY count DESC, avg_price DESC;
+
+
+SELECT home_type, MIN(price) AS min_price FROM Rooms
+WHERE has_tv = True
+GROUP BY home_type
+HAVING COUNT(*) >= 5;
+
+
+/* Задача 20:
+Выведите типы комнат (поле home_type) и разницу между самым дорогим и 
+самым дешевым представителем данного типа. В итоговую выборку включите 
+только те типы жилья, количество которых в таблице Rooms больше или равно 2.
+Для вывода разницы стоимости используйте псевдоним difference. */
+SELECT home_type, MAX(price) - MIN(price) AS difference
+FROM Rooms
+GROUP BY home_type
+HAVING COUNT(home_type) >= 2;
+
+
+
